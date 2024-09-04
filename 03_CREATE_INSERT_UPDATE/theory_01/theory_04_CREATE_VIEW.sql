@@ -18,7 +18,7 @@ CREATE VIEW v_table AS
 		<condition1> AND <condition2>;
 */
 
-USE training_db;
+USE 050824_dam_ClassWork;
 
 CREATE VIEW v_table AS
     SELECT 
@@ -31,12 +31,14 @@ CREATE VIEW v_table AS
 /* Проверям результат */         
 SELECT * FROM v_table;
 
+
+SELECT * FROM toys1;
 /* Меняем данные исзодной таблицы */         
 UPDATE toys1 
 SET 
     weight = 15
 WHERE
-    toy_name = 'Скутер' LIMIT 1;
+    toy_name = 'Скутер' LIMIT 1000;
     
 /* Проверям результат изменений в исходной таблицы и затем во view*/        
 SELECT * FROM toys1;

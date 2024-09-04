@@ -26,7 +26,7 @@ CREATE TABLE goods (
     arrival_date DATE
 );
 
-CREATE TABLE goods (
+CREATE TABLE IF NOT EXISTS goods (
     title VARCHAR(30),
     quantity INTEGER,
     in_stock CHAR(1),

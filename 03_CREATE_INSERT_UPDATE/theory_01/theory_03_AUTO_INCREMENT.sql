@@ -33,6 +33,11 @@ CREATE TABLE toys2 (
     weight INTEGER
 );
 
+INSERT INTO toys2 
+	(toy_id, toy_name, weight) 
+VALUES 
+	(2, "Велосипед", 10);
+    
 SELECT * FROM toys2;
 
 INSERT INTO toys2

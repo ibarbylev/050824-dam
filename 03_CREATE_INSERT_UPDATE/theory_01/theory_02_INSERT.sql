@@ -24,6 +24,7 @@ VALUES
 	("Велосипед", 10, "Y", "2024-08-22");
 
 INSERT INTO goods 
+	(title, quantity, in_stock, arrival_date) 
 VALUES
 	("Самокат",	3, 	"N", "2024-08-25"),
 	("Роликовые коньки", 2, "Y", "2024-08-25");
