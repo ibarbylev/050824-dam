@@ -6,10 +6,11 @@ DATE_FORMAT - наоборот, преобразует дату/время в с
 */
 
 
-SELECT DATE_FORMAT(NOW(), '%d %m %Y %H:%i:%s');	 -- '08 10 2024 17:13:06'
-
+SELECT DATE_FORMAT(NOW(), '%d %m %Y %H %i %s');	 -- '08 10 2024 17:13:06'
+SELECT NOW();  -- '2024-10-09 11:00:44'
 
 SELECT DATE_FORMAT(NOW(), '%d %M %Y %H:%i:%s');  -- 08 October 2024 17:12:42
+SELECT DATE_FORMAT(NOW(), '%M');  -- October
 
 -- Можно также изменить настойки, чтобы учитывался локальный язык
 SET lc_time_names = 'ru_RU';
