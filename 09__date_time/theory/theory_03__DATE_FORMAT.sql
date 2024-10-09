@@ -14,6 +14,7 @@ SELECT DATE_FORMAT(NOW(), '%M');  -- October
 
 -- Можно также изменить настойки, чтобы учитывался локальный язык
 SET lc_time_names = 'ru_RU';
+SET lc_time_names = 'de_DE';
 
 SELECT DATE_FORMAT(NOW(), '%d %M %Y %H:%i:%s');  -- 08 Октября 2024 17:12:42
 
