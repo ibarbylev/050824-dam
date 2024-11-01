@@ -1,3 +1,8 @@
+SELECT * FROM airport.airliners;
+SELECT * FROM airport.clients;
+SELECT * FROM airport.tickets;
+SELECT * FROM airport.trips;
+
 -- 1. Вывести список model_name всех самолетов (airliners) и количество всех самолетов в таблице.
 -- без OVER()
 -- c OVER()

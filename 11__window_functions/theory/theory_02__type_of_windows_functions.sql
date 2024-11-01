@@ -88,6 +88,14 @@ FROM hr.employees;
     RANGE BETWEEN — похож на ROWS, но работает с диапазоном значений,
                     а не с конкретными строками.
 
+    Для указания диапазона строк окна возможны следующие варианты:
+    UNBOUNDED PRECEDING	    - Все строки от начала набора данных
+    N PRECEDING	            - N строк до текущей строки (или значение)
+    CURRENT ROW	            - Текущая строка (значение текущей строки)
+    N FOLLOWING	            - N строк после текущей строки (или значение)
+    UNBOUNDED FOLLOWING	    - Все строки от текущей строки до конца набора данных
+
+
 Пример:*/
 
 -- В этом запросе вычисляется сумма зарплаты между одно предыдущей строкой и одной следующей
@@ -101,6 +109,42 @@ FROM hr.employees;
 SELECT first_name, last_name, salary,
        SUM(salary) OVER (ORDER BY salary ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sum
 FROM hr.employees;
+
+    Следует обращать внимание, что ROWS учитывает строки относительно текущей,
+    а RANGE - значения строк относительно значения текущей.
+
+Например:
+
+SELECT
+	salary,
+	SUM(salary) OVER(ORDER BY salary RANGE BETWEEN CURRENT ROW AND 3000 FOLLOWING)
+FROM (
+	SELECT * FROM hr.employees LIMIT 5) AS t;
+
+/* RANGE означает:
+   суммировать строки, где ЗП в диапазоне от текущей до текущая + 3000
+  salary    SUM(salary)     ДИАПАЗОН salary RANGE BETWEEN CURRENT ROW AND 3000 FOLLOWING означает
+'6000.00',  '15000.00'      от 6 000 до 9 000
+'9000.00',  '9000.00'       от 9 000 до 12 000
+'17000.00', '34000.00'      от 17 000 до 20 000
+'17000.00', '34000.00'      от 17 000 до 20 000
+'24000.00', '24000.00'      от 24 000 до 24 000
+ */
+
+
+SELECT
+	salary,
+	SUM(salary) OVER(ORDER BY salary ROWS BETWEEN CURRENT ROW AND 3000 FOLLOWING)
+FROM (
+	SELECT * FROM hr.employees LIMIT 5) AS t;
+
+/*
+  salary     SUM(salary)    ДИАПАЗОН salary ROWS BETWEEN CURRENT ROW AND 3000 FOLLOWING означает:
+'6000.00',  '73000.00'      от текущей строки до 3000 последующих строк
+'9000.00',  '67000.00'      от текущей строки до 3000 последующих строк
+'17000.00', '58000.00'      от текущей строки до 3000 последующих строк
+'17000.00', '41000.00'      от текущей строки до 3000 последующих строк
+'24000.00', '24000.00'      от текущей строки до 3000 последующих строк */
 
 /*
 5. СУММАРНЫЕ и КУМУЛЯТИВНЫЕ функции
