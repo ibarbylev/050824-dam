@@ -147,6 +147,29 @@ FROM (
 '24000.00', '24000.00'      от текущей строки до 3000 последующих строк */
 
 /*
+RANGE очень удобно использовать для дат, когда требуется получить "скользящий" итог.
+В следующем примере мы получаем итог продаж за каждые 2 месяца: текущий и предшествующий: */
+
+SELECT DISTINCT
+    MONTH(ODATE) AS month_,
+    SUM(AMT) OVER(PARTITION BY MONTH(ODATE)) AS month_sales,
+    SUM(AMT) OVER (
+        ORDER BY ODAtE
+        RANGE BETWEEN INTERVAL 1 MONTH PRECEDING AND CURRENT ROW
+    ) AS rolling_2_month_sales
+FROM
+    shop.ORDERS
+ORDER BY
+    ODATE;
+/*
+
+month,  month_sales,    rolling_2_month_sales
+3       12944.59,       12944.59
+4        1788.98,       14733.57
+5        4723.00,        6511.98
+6       11201.83,       15924.83
+
+
 5. СУММАРНЫЕ и КУМУЛЯТИВНЫЕ функции
 
     Эти функции вычисляют агрегатные значения для строки и всех предыдущих строк в рамках окна.
