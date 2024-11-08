@@ -1,0 +1,20 @@
+USE world;
+SELECT * FROM city;
+SELECT * FROM country;
+SELECT * FROM countrylanuage;
+
+SELECT DISTINCT region FROM country; -- чтобы понять, сколько вообще есть регионов
+
+/* 1. Найти города с наибольшим населением в каждом регионе. Вывести по алфавиту:
+region_name, country_name, city_name, city_population */
+-- c OVER():
+
+-- без OVER():
+
+/* 2. Определить среднюю продолжительность жизни стран, которая превышает среднюю продолжительность по континенту:
+	region_name, country_name, country_life_expectancy, avg_life_expectancy_by_region
+    Регионы должны быть отсортированы по алфавиту, а продолжительность жизни в стране по убыванию */
+
+-- с OVER():
+
+-- без OVER():
