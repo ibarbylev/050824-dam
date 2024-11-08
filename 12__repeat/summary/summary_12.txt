@@ -1,7 +1,6 @@
 USE world;
 SELECT * FROM city;
 SELECT * FROM country;
-SELECT * FROM countrylanuage;
 
 SELECT DISTINCT region FROM country; -- чтобы понять, сколько вообще есть регионов
 
