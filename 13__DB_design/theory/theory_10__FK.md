@@ -15,7 +15,7 @@ CREATE TABLE user_profiles (
     profile_id INT AUTO_INCREMENT PRIMARY KEY,
     user_idusersusers INT NULL,  -- Можно оставить NULL, если профиль не задан
     bio TEXT,
-    user_id INT UNIQUE,         -- Ограничение на уникальность внешнего ключа
+    user_id INT UNIQUE NULL,     -- Ограничение на уникальность внешнего ключа (если не NULL, то уникальный)
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 ```
