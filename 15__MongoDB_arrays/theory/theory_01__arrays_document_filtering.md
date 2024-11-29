@@ -186,7 +186,7 @@ db.getCollection('products').find(
 
 Таким образом, вот код, который объединит в строку массив с любыми типами данных
 ```
-{
+
   new_field_name: {
     $reduce: {
       input: "field_name",
@@ -202,5 +202,5 @@ db.getCollection('products').find(
       }
     }
   }
-}
+
 ```
