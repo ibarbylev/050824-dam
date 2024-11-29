@@ -12,7 +12,7 @@ db.products.insertMany([
     { name: "Laptop", tags: ["electronics", "computer", "portable"] },
     { name: "Smartphone", tags: ["electronics", "mobile", "portable"] },
     { name: "Desk", tags: ["furniture", "wood", "office"] },
-    { name: "Chair", tags: ["furniture", "wood"] }
+    { name: "Chair", tags: ["furniture", "wood"] } 
 ]);
 ```
 Необходимо найти продукты, у которых в массиве tags одновременно присутствуют "electronics" и "portable".
@@ -69,7 +69,7 @@ db.collection.find({
 
 Оператор `$in` проверяет, содержит ли массив хотя бы одно из указанных значений.
 
-*Пример:  Найти товары, у которых в массиве tags есть хотя бы один из тегов "portable" или "mobile"*
+*Пример:  Найти товары, у которых в массиве tags есть хотя бы один из тегов "portable" или "mobile"*    
 
 ```
 db.collection.find({ 
@@ -95,7 +95,7 @@ db.collection.find({
 
 Оператор `$nin` проверяет, не содержит ли массив ни одно из указанных значений.
 
-*Пример:  Найти товары, у которых в массиве tags не ни тега "portable" ни тега "wood"*
+*Пример:  Найти товары, у которых в массиве tags не ни тега "portable" ни тега "wood"*    
 
 ```
 db.collection.find({ 
@@ -104,3 +104,103 @@ db.collection.find({
 ```
 
 Ожидаемый результат: (пустое значение)
+
+## 5. Объединение всех строковых элементов массива в одну строку
+
+Для этого в Project необходимо применить запрос с функцией reduce:
+```
+{
+  new_field_name: {
+    $reduce: {
+      input: '$field_name',
+      initialValue: '',
+      in: {
+        $cond: [
+          { $eq: ['$$value', ''] },
+          '$$this',
+          {
+            $concat: ['$$value', ', ', '$$this']
+          }
+        ]
+      }
+    }
+  }
+}
+```
+Здесь `field_name` - имя поля, которое содержит массив
+`new_field_name` - новое имя поля с объединёнными элементами массива.
+
+Для нашего примера получится примерно следующее:
+```
+db.getCollection('products').find(
+  {},
+  {
+    _id: 0,
+    name: 1,
+    tags_str: {
+      $reduce: {
+        input: '$tags',
+        initialValue: '',
+        in: {
+          $cond: [
+            { $eq: ['$$value', ''] },
+            '$$this',
+            {
+              $concat: ['$$value', ', ', '$$this']
+            }
+          ]
+        }
+      }
+    }
+  }
+);
+```
+
+Ожидаемые результат:
+```
+[{
+  "name": "Laptop",
+  "tags_str": "electronics, computer, portable"
+},
+{
+  "name": "Smartphone",
+  "tags_str": "electronics, mobile, portable"
+},
+{
+  "name": "Desk",
+  "tags_str": "furniture, wood, office"
+},
+{
+  "name": "Chair",
+  "tags_str": "furniture, wood"
+}]
+```
+
+## 6. Универсальный запрос для объединения в строку массива с любым типом данных
+
+Для того, чтобы конкатенировать любые значения массива, их сначала надо превратить в строку.
+В нашем случае, это переменная `$$this`:
+```
+ { $toString: "$$this" }
+```
+
+Таким образом, вот код, который объединит в строку массив с любыми типами данных
+```
+{
+  new_field_name: {
+    $reduce: {
+      input: "field_name",
+      initialValue: "",
+      in: {
+        $cond: [
+          { $eq: ["$$value", ""] },
+          { $toString: "$$this" },
+          {
+            $concat: ["$$value", ", ", { $toString: "$$this" }]
+          }
+        ]
+      }
+    }
+  }
+}
+```
