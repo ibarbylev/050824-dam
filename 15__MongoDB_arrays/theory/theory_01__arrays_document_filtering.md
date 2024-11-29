@@ -189,7 +189,7 @@ db.getCollection('products').find(
 
   new_field_name: {
     $reduce: {
-      input: "field_name",
+      input: "$field_name",
       initialValue: "",
       in: {
         $cond: [
