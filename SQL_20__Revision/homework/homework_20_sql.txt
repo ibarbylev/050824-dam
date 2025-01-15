@@ -1,0 +1,84 @@
+-- 1. Работаем с базой данных film.
+
+/* 2. Вывести названия фильмов с расшифровкой рейтинга для каждого.
+ В таблице film хранятся годы рейтингов:
+  G – Все возрастные категории.
+  PG – Рекомендуется контроль родителей.
+  PG-13 – Осторожно, для детей до 13 лет.
+  R – Ограничено. Для детей до 17 лет требуется сопровождение взрослого.
+  NC-17 - Только для зрителей старше 17 лет.
+
+Нужно воспользоваться оператором case чтобы определить для каждого кода условие,
+по которому будет выводится его развернутое описание (1 предложение). */
+
+SELECT
+    title, rating,
+    CASE
+        WHEN rating = 'G' THEN 'Все возрастные категории.'
+        WHEN rating = 'PG' THEN 'Рекомендуется контроль родителей.'
+        WHEN rating = 'PG-13' THEN 'Осторожно, для детей до 13 лет.'
+        WHEN rating = 'R' THEN 'Ограничено, требуется сопровождение взрослого.'
+        WHEN rating = 'NC-17' THEN 'Только для зрителей старше 17 лет.'
+        ELSE 'Рейтинг не доступен'
+    END AS rating_description
+FROM film;
+
+-- 3. Выведите количество фильмов в каждой категории рейтинга. Используем group by.
+SELECT
+	t.rating_description, COUNT(*)
+FROM
+	(SELECT
+		title, rating,
+		CASE
+			WHEN rating = 'G' THEN 'Все возрастные категории.'
+			WHEN rating = 'PG' THEN 'Рекомендуется контроль родителей.'
+			WHEN rating = 'PG-13' THEN 'Осторожно, для детей до 13 лет.'
+			WHEN rating = 'R' THEN 'Ограничено, требуется сопровождение взрослого.'
+			WHEN rating = 'NC-17' THEN 'Только для зрителей старше 17 лет.'
+			ELSE 'Рейтинг не доступен'
+		END AS rating_description
+	FROM film) as t
+GROUP BY t.rating_description;
+
+
+/* 4. Используя оконные функции и partition by, выведите
+список названий фильмов, рейтинг и количество фильмов в каждом рейтинге.
+Объясните, чем отличаются результаты предыдущего запроса и запроса в этой задаче. */
+
+SELECT
+    title, rating,
+    CASE
+        WHEN rating = 'G' THEN 'Все возрастные категории.'
+        WHEN rating = 'PG' THEN 'Рекомендуется контроль родителей.'
+        WHEN rating = 'PG-13' THEN 'Осторожно, для детей до 13 лет.'
+        WHEN rating = 'R' THEN 'Ограничено, требуется сопровождение взрослого.'
+        WHEN rating = 'NC-17' THEN 'Только для зрителей старше 17 лет.'
+        ELSE 'Рейтинг не доступен'
+    END AS rating_description,
+    COUNT(*) OVER (PARTITION BY rating) AS film_count
+FROM film
+ORDER BY film_count;
+
+/* 4. Изучите таблицы payment и customer. Выведите список всех платежей с указанием
+имени и фамилии каждого заказчика, датой платежа и суммой. */
+SELECT
+    c.first_name,
+    c.last_name,
+    p.payment_date,
+    p.amount
+FROM payment p
+JOIN customer c ON p.customer_id = c.customer_id
+ORDER BY p.payment_date;
+
+
+/* 5. Поменяйте предыдущий запрос так, чтобы дата выводилась в формате
+“число, название месяца, год” (без времени). */
+SELECT
+    c.first_name,
+    c.last_name,
+    DATE_FORMAT(p.payment_date, '%d, %M, %Y') AS payment_date,
+    p.amount
+FROM payment p
+JOIN customer c ON p.customer_id = c.customer_id
+ORDER BY p.payment_date;
+
